@@ -1,0 +1,24 @@
+{
+  "name": "electron-clock-virtual",
+  "version": "1.0.0",
+  "description": "Virtual clock made with electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeooRibeiro/electron-clock-virtual.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LeooRibeiro/electron-clock-virtual/issues"
+  },
+  "homepage": "https://github.com/LeooRibeiro/electron-clock-virtual#readme",
+  "devDependencies": {
+    "electron": "^43.4.0"
+  }
+}
