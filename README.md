@@ -14,7 +14,7 @@ Relógio digital **e sistema Pomodoro** feitos com **Electron**, usando `HTML`, 
 - ▶️ Iniciar / Pausar / Retomar / Pular / Resetar
 - 🔄 Anel de progresso circular + contador de ciclos
 - ⚙️ Durações das etapas configuráveis (persistidas em `localStorage`)
-- 🔔 Notificações nativas do SO ao fim de cada fase (com fallback HTML5)
+- 🔔 Notificações nativas do SO no desktop e Web Notification API no navegador (com pedido de permissão explícito, via controle na interface)
 - ⏱️ Timer baseado em timestamp absoluto — sem drift
 
 ### Geral

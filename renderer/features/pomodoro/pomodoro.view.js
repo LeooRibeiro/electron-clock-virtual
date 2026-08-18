@@ -1,6 +1,11 @@
 import { createPomodoroEngine, PHASES, STATE } from './pomodoro.js';
 import { loadSettings, saveSettings } from './settings.js';
-import { notify } from '../../core/notify.js';
+import {
+  NOTIFICATION_PERMISSION,
+  getNotificationPermission,
+  notify,
+  requestNotificationPermission,
+} from '../../core/notify.js';
 
 const RING_RADIUS = 54;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -39,6 +44,14 @@ function template() {
           <span>Ciclos p/ pausa longa</span>
           <input type="number" data-setting="cyclesBeforeLongBreak" min="1" max="12" value="4">
         </label>
+
+        <div class="pomodoro__notify">
+          <h2 class="pomodoro__settings-title">Notificações</h2>
+          <button class="pomodoro__btn" type="button" data-action="enable-notifications">
+            Ativar notificações
+          </button>
+          <p class="pomodoro__notify-status" data-notify-status role="status"></p>
+        </div>
       </aside>
 
       <div class="pomodoro__timer">
@@ -90,6 +103,8 @@ export function initPomodoroView(container) {
   const skipBtn = root.querySelector('[data-action="skip"]');
   const resetBtn = root.querySelector('[data-action="reset"]');
   const inputs = [...root.querySelectorAll('[data-setting]')];
+  const notifyBtn = root.querySelector('[data-action="enable-notifications"]');
+  const notifyStatusEl = root.querySelector('[data-notify-status]');
 
   const settings = loadSettings();
   const engine = createPomodoroEngine({ settings });
@@ -147,6 +162,36 @@ export function initPomodoroView(container) {
     });
   });
 
+  function renderNotificationStatus() {
+    if (window.desktop && typeof window.desktop.notify === 'function') {
+      notifyStatusEl.textContent = 'Notificações nativas do sistema';
+      notifyBtn.hidden = true;
+      return;
+    }
+
+    const permission = getNotificationPermission();
+    if (permission === NOTIFICATION_PERMISSION.GRANTED) {
+      notifyStatusEl.textContent = 'Ativas';
+      notifyBtn.hidden = true;
+    } else if (permission === NOTIFICATION_PERMISSION.DENIED) {
+      notifyStatusEl.textContent = 'Bloqueadas — libere nas configurações do navegador';
+      notifyBtn.disabled = true;
+    } else if (permission === NOTIFICATION_PERMISSION.UNSUPPORTED) {
+      notifyStatusEl.textContent = 'Navegador não suporta notificações';
+      notifyBtn.hidden = true;
+    } else {
+      notifyStatusEl.textContent = 'Permita para receber alertas ao fim de cada fase';
+    }
+  }
+
+  notifyBtn.addEventListener('click', async () => {
+    const result = await requestNotificationPermission();
+    renderNotificationStatus();
+    if (result === NOTIFICATION_PERMISSION.GRANTED) {
+      notify({ title: 'Clock Virtual', body: 'Notificações ativadas!' });
+    }
+  });
+
   engine.on((name, snapshot) => {
     render();
     if (name === 'phase-change') {
@@ -154,6 +199,7 @@ export function initPomodoroView(container) {
     }
   });
   render();
+  renderNotificationStatus();
 }
 
 function notifyPhaseChange(snapshot) {
