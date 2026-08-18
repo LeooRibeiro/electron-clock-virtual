@@ -16,10 +16,13 @@ Um relógio digital simples feito com **Electron**, usando apenas `HTML`, `CSS` 
 │   ├── main.js         # Processo principal do Electron (janela + ciclo de vida)
 │   └── preload.js      # Ponte segura (contextBridge) entre renderer e Node
 ├── renderer/
-│   ├── index.html      # Estrutura da página
+│   ├── index.html      # Estrutura da página (com abas)
 │   ├── app.js          # Bootstrap do renderer (módulo ES)
 │   ├── styles/
-│   │   └── base.css    # Estilos e visual
+│   │   ├── base.css    # Estilos base e visual
+│   │   └── tabs.css    # Navegação por abas
+│   ├── core/
+│   │   └── tabs.js     # Gerenciador de abas (estado + acessibilidade)
 │   └── features/
 │       └── clock/
 │           └── clock.js # Lógica do relógio (módulo ES)

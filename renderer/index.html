@@ -6,27 +6,61 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:;">
     <title>Clock Virtual</title>
     <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/tabs.css">
 </head>
 <body>
+    <nav class="tabs" role="tablist" aria-label="Navegação do aplicativo">
+        <button id="tab-clock" class="tabs__tab" role="tab" aria-selected="true"
+                aria-controls="panel-clock" data-tab="clock" tabindex="0">
+            Relógio
+        </button>
+        <button id="tab-pomodoro" class="tabs__tab" role="tab" aria-selected="false"
+                aria-controls="panel-pomodoro" data-tab="pomodoro" tabindex="-1">
+            Pomodoro
+        </button>
+    </nav>
+
     <main class="card">
-        <header class="card__header">
-            <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true">
-                <g fill="none" stroke="#7CC8FF" stroke-width="1.4">
-                    <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(-24 12 12)"/>
-                    <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(24 12 12)"/>
-                    <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(90 12 12)"/>
-                </g>
-                <circle cx="12" cy="12" r="3.4" fill="#7CC8FF"/>
-            </svg>
-            <h1 class="card__title">Clock Virtual</h1>
-        </header>
+        <section id="panel-clock" class="panel is-active" role="tabpanel"
+                 aria-labelledby="tab-clock" data-panel="clock">
+            <header class="card__header">
+                <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <g fill="none" stroke="#7CC8FF" stroke-width="1.4">
+                        <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(-24 12 12)"/>
+                        <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(24 12 12)"/>
+                        <ellipse cx="12" cy="12" rx="10.5" ry="3.6" transform="rotate(90 12 12)"/>
+                    </g>
+                    <circle cx="12" cy="12" r="3.4" fill="#7CC8FF"/>
+                </svg>
+                <h1 class="card__title">Clock Virtual</h1>
+            </header>
 
-        <div class="card__separator" aria-hidden="true"></div>
+            <div class="card__separator" aria-hidden="true"></div>
 
-        <section class="card__body">
-            <time id="clock" class="card__time" datetime="">--:--:--</time>
-            <time id="date" class="card__date" datetime="">Carregando...</time>
-            <p id="greeting" class="card__greeting"></p>
+            <div class="card__body">
+                <time id="clock" class="card__time" datetime="">--:--:--</time>
+                <time id="date" class="card__date" datetime="">Carregando...</time>
+                <p id="greeting" class="card__greeting"></p>
+            </div>
+        </section>
+
+        <section id="panel-pomodoro" class="panel" role="tabpanel"
+                 aria-labelledby="tab-pomodoro" data-panel="pomodoro">
+            <header class="card__header">
+                <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <g fill="none" stroke="#ff9d6f" stroke-width="1.4">
+                        <path d="M12 4C8 4 5 7 5 11c0 4 2.5 7 5.5 8.4a2 2 0 0 0 3 0C16.5 18 19 15 19 11c0-4-3-7-7-7z"/>
+                        <path d="M9.5 10.5 12 13l2.5-2.5"/>
+                        <circle cx="12" cy="11" r="6.5"/>
+                    </g>
+                    <circle cx="12" cy="11" r="1.8" fill="#ff9d6f"/>
+                </svg>
+                <h1 class="card__title">Pomodoro</h1>
+            </header>
+
+            <div class="card__separator" aria-hidden="true"></div>
+
+            <p class="card__placeholder">O sistema Pomodoro chega em breve.</p>
         </section>
     </main>
 
