@@ -1,5 +1,5 @@
-import { initClock } from './features/clock/clock.js';
+import { initClockView } from './features/clock/clock.view.js';
 import { initTabs } from './core/tabs.js';
 
-initClock();
+initClockView();
 initTabs();

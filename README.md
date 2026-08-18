@@ -25,7 +25,8 @@ Um relógio digital simples feito com **Electron**, usando apenas `HTML`, `CSS` 
 │   │   └── tabs.js     # Gerenciador de abas (estado + acessibilidade)
 │   └── features/
 │       └── clock/
-│           └── clock.js # Lógica do relógio (módulo ES)
+│           ├── clock.js      # Engine pura do relógio (dados/formatação, sem DOM)
+│           └── clock.view.js # Renderização no DOM (tick alinhado ao segundo)
 ```
 
 ## 🚀 Como executar
