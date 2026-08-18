@@ -1,13 +1,13 @@
-const { Notification, ipcMain } = require('electron');
+import { Notification, ipcMain } from 'electron';
 
-const NOTIFICATION_CHANNEL = 'app:notify';
+export const NOTIFICATION_CHANNEL = 'app:notify';
 
 function sanitize(value, fallback, maxLength) {
   const str = String(value ?? '').trim();
   return str ? str.slice(0, maxLength) : fallback;
 }
 
-function registerNotificationHandler() {
+export function registerNotificationHandler() {
   ipcMain.handle(NOTIFICATION_CHANNEL, (_event, payload = {}) => {
     if (!Notification.isSupported()) return false;
 
@@ -19,5 +19,3 @@ function registerNotificationHandler() {
     return true;
   });
 }
-
-module.exports = { registerNotificationHandler, NOTIFICATION_CHANNEL };

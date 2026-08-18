@@ -1,24 +1,33 @@
 {
   "name": "electron-clock-virtual",
-  "version": "2.0.1",
+  "version": "2.1.7",
   "description": "Virtual clock and Pomodoro time with notifications made with electron",
   "main": "main/main.js",
+  "author": "LeooRibeiro",
+  "license": "ISC",
+  "type": "module",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "transform": {}
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LeooRibeiro/electron-clock-virtual.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": [
+    "electron",
+    "clock",
+    "pomodoro"
+  ],
   "bugs": {
     "url": "https://github.com/LeooRibeiro/electron-clock-virtual/issues"
   },
   "homepage": "https://github.com/LeooRibeiro/electron-clock-virtual#readme",
   "devDependencies": {
-    "electron": "^43.4.0"
+    "electron": "^43.4.0",
+    "jest": "^29.7.0"
   }
 }

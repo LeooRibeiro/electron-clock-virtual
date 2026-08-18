@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const { registerNotificationHandler } = require('./notifications');
+import { app, BrowserWindow } from 'electron';
+import path from 'node:path';
+import { registerNotificationHandler } from './notifications.js';
 
 let mainWindow;
 
@@ -12,14 +12,14 @@ function createWindow() {
     resizable: false,
     frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(import.meta.dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+  mainWindow.loadFile(path.join(import.meta.dirname, '..', 'renderer', 'index.html'));
 }
 
 app.whenReady().then(() => {

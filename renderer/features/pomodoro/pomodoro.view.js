@@ -21,39 +21,8 @@ function formatTime(ms) {
 function template() {
   return `
     <div class="pomodoro">
-      <header class="card__header">
-        <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true">
-          <g fill="none" stroke="#ff9d6f" stroke-width="1.4">
-            <path d="M12 4C8 4 5 7 5 11c0 4 2.5 7 5.5 8.4a2 2 0 0 0 3 0C16.5 18 19 15 19 11c0-4-3-7-7-7z"/>
-            <path d="M9.5 10.5 12 13l2.5-2.5"/>
-            <circle cx="12" cy="11" r="6.5"/>
-          </g>
-          <circle cx="12" cy="11" r="1.8" fill="#ff9d6f"/>
-        </svg>
-        <h1 class="card__title">Pomodoro</h1>
-      </header>
-
-      <div class="card__separator" aria-hidden="true"></div>
-
-      <p class="pomodoro__phase" role="status" aria-live="polite">Foco</p>
-
-      <div class="pomodoro__ring">
-        <svg viewBox="0 0 120 120" role="img" aria-label="Progresso do Pomodoro">
-          <circle class="pomodoro__ring-track" cx="60" cy="60" r="54"></circle>
-          <circle class="pomodoro__ring-progress" cx="60" cy="60" r="54"></circle>
-        </svg>
-        <span class="pomodoro__time" role="timer">25:00</span>
-      </div>
-
-      <p class="pomodoro__cycles" aria-live="polite">Ciclo 0 de 4</p>
-
-      <div class="pomodoro__controls">
-        <button class="pomodoro__btn pomodoro__btn--primary" type="button" data-action="primary">Iniciar</button>
-        <button class="pomodoro__btn" type="button" data-action="skip">Pular</button>
-        <button class="pomodoro__btn" type="button" data-action="reset">Resetar</button>
-      </div>
-
-      <div class="pomodoro__settings">
+      <aside class="pomodoro__settings" aria-label="Configurações do Pomodoro">
+        <h2 class="pomodoro__settings-title">Períodos</h2>
         <label class="pomodoro__field">
           <span>Foco (min)</span>
           <input type="number" data-setting="focusMinutes" min="1" max="120" value="25">
@@ -70,6 +39,40 @@ function template() {
           <span>Ciclos p/ pausa longa</span>
           <input type="number" data-setting="cyclesBeforeLongBreak" min="1" max="12" value="4">
         </label>
+      </aside>
+
+      <div class="pomodoro__timer">
+        <header class="card__header">
+          <svg class="card__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <g fill="none" stroke="#ff9d6f" stroke-width="1.4">
+              <path d="M12 4C8 4 5 7 5 11c0 4 2.5 7 5.5 8.4a2 2 0 0 0 3 0C16.5 18 19 15 19 11c0-4-3-7-7-7z"/>
+              <path d="M9.5 10.5 12 13l2.5-2.5"/>
+              <circle cx="12" cy="11" r="6.5"/>
+            </g>
+            <circle cx="12" cy="11" r="1.8" fill="#ff9d6f"/>
+          </svg>
+          <h1 class="card__title">Pomodoro</h1>
+        </header>
+
+        <div class="card__separator" aria-hidden="true"></div>
+
+        <p class="pomodoro__phase" role="status" aria-live="polite">Foco</p>
+
+        <div class="pomodoro__ring">
+          <svg viewBox="0 0 120 120" role="img" aria-label="Progresso do Pomodoro">
+            <circle class="pomodoro__ring-track" cx="60" cy="60" r="54"></circle>
+            <circle class="pomodoro__ring-progress" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <span class="pomodoro__time" role="timer">25:00</span>
+        </div>
+
+        <p class="pomodoro__cycles" aria-live="polite">Ciclo 0 de 4</p>
+
+        <div class="pomodoro__controls">
+          <button class="pomodoro__btn pomodoro__btn--primary" type="button" data-action="primary">Iniciar</button>
+          <button class="pomodoro__btn" type="button" data-action="skip">Pular</button>
+          <button class="pomodoro__btn" type="button" data-action="reset">Resetar</button>
+        </div>
       </div>
     </div>
   `;

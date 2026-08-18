@@ -1,14 +1,29 @@
+.pomodoro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+    width: 100%;
+}
+
 .pomodoro__phase {
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 
+.pomodoro__timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 .pomodoro__ring {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 190px;
+    height: 190px;
     margin: 18px auto 10px;
 }
 
@@ -21,13 +36,13 @@
 .pomodoro__ring-track {
     fill: none;
     stroke: rgba(111, 209, 255, 0.18);
-    stroke-width: 6;
+    stroke-width: 7;
 }
 
 .pomodoro__ring-progress {
     fill: none;
     stroke: var(--accent);
-    stroke-width: 6;
+    stroke-width: 7;
     stroke-linecap: round;
     transition: stroke-dashoffset 0.25s linear, stroke 0.3s;
 }
@@ -42,7 +57,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 38px;
+    font-size: 46px;
     font-weight: 200;
     letter-spacing: 2px;
     font-variant-numeric: tabular-nums;
@@ -58,8 +73,8 @@
 .pomodoro__controls {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: 18px;
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .pomodoro__btn {
@@ -69,8 +84,8 @@
     border: 1px solid var(--card-border);
     color: var(--text);
     font: inherit;
-    font-size: 14px;
-    padding: 8px 20px;
+    font-size: 15px;
+    padding: 10px 24px;
     border-radius: 999px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
@@ -100,34 +115,59 @@
 
 .pomodoro__settings {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 22px;
+    flex-direction: column;
+    gap: 20px;
+    padding: 32px 30px;
+    border-radius: 18px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.pomodoro__settings-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--accent);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
 }
 
 .pomodoro__field {
     -webkit-app-region: no-drag;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 
 .pomodoro__field input {
-    width: 74px;
-    padding: 6px 8px;
+    width: 96px;
+    padding: 8px 10px;
     text-align: center;
     font: inherit;
+    font-size: 15px;
     color: var(--text);
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--card-border);
     border-radius: 8px;
     transition: border-color 0.2s;
+}
+
+.pomodoro__field input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.pomodoro__field input::-webkit-outer-spin-button,
+.pomodoro__field input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .pomodoro__field input:focus-visible {
