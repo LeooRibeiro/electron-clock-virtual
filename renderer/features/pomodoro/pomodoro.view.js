@@ -167,7 +167,7 @@ export function initPomodoroView(container) {
 
     const permission = getNotificationPermission();
     if (permission === NOTIFICATION_PERMISSION.GRANTED) {
-      notifyStatusEl.textContent = 'Ativas';
+      notifyStatusEl.textContent = 'Notificações ativadas!';
       notifyBtn.hidden = true;
     } else if (permission === NOTIFICATION_PERMISSION.DENIED) {
       notifyStatusEl.textContent = 'Bloqueadas — libere nas configurações do navegador';
@@ -182,10 +182,11 @@ export function initPomodoroView(container) {
 
   notifyBtn.addEventListener('click', async () => {
     const result = await requestNotificationPermission();
-    renderNotificationStatus();
     if (result === NOTIFICATION_PERMISSION.GRANTED) {
-      notify({ title: 'Clock Virtual', body: 'Notificações ativadas!' });
+      const shown = await notify({ title: 'Clock Virtual 🔔', body: 'Notificações ativadas!' });
+      if (!shown) return;
     }
+    renderNotificationStatus();
   });
 
   engine.on((name, snapshot) => {
@@ -194,17 +195,22 @@ export function initPomodoroView(container) {
       notifyPhaseChange(snapshot);
     }
     if (name === 'complete') {
-      notify({ title: 'Sessão concluída', body: '6 ciclos finalizados! Mais uma rodada?' });
+      notify({ title: 'Sessão concluída 🏆', body: '6 ciclos finalizados! Bora focar? 🎯' });
     }
   });
   render();
   renderNotificationStatus();
 }
 
+const PHASE_NOTIFICATION = {
+  [PHASES.FOCUS]: { title: 'Pausa concluída ⏰', body: 'Bora focar! 🎯' },
+  [PHASES.SHORT_BREAK]: { title: 'Foco concluído 🍅', body: 'Hora da pausa curta ☕' },
+  [PHASES.LONG_BREAK]: { title: 'Foco concluído 🍅', body: 'Hora da pausa longa 🧘' },
+};
+
 function notifyPhaseChange(snapshot) {
-  if (snapshot.phase === PHASES.FOCUS) {
-    notify({ title: 'Pausa concluída', body: 'Hora do foco!' });
-  } else {
-    notify({ title: 'Foco concluído', body: 'Hora da pausa!' });
+  const message = PHASE_NOTIFICATION[snapshot.phase];
+  if (message) {
+    notify(message);
   }
 }
