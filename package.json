@@ -1,8 +1,8 @@
 {
   "name": "electron-clock-virtual",
-  "version": "1.0.0",
-  "description": "Virtual clock made with electron",
-  "main": "main.js",
+  "version": "2.0.1",
+  "description": "Virtual clock and Pomodoro time with notifications made with electron",
+  "main": "main/main.js",
   "scripts": {
     "start": "electron ."
   },

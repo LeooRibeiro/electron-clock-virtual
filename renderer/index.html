@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:;">
     <title>Clock Virtual</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/base.css">
 </head>
 <body>
     <main class="card">
@@ -29,6 +30,6 @@
         </section>
     </main>
 
-    <script src="renderer.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

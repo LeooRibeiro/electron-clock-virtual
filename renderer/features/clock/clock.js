@@ -1,17 +1,10 @@
-// Elementos do relógio
-const clockEl = document.getElementById('clock');
-const dateEl = document.getElementById('date');
-const greetingEl = document.getElementById('greeting');
-
-// Saudação de acordo com o horário
 function getGreeting(hour) {
   if (hour < 12) return 'Bom dia!';
   if (hour < 18) return 'Boa tarde!';
   return 'Boa noite!';
 }
 
-// Atualiza hora, data e saudação na tela
-function updateClock() {
+function updateClock(clockEl, dateEl, greetingEl) {
   const now = new Date();
 
   clockEl.textContent = now.toLocaleTimeString('pt-BR');
@@ -28,6 +21,12 @@ function updateClock() {
   greetingEl.textContent = getGreeting(now.getHours());
 }
 
-// Atualiza na carga e a cada segundo
-updateClock();
-setInterval(updateClock, 1000);
+export function initClock() {
+  const clockEl = document.getElementById('clock');
+  const dateEl = document.getElementById('date');
+  const greetingEl = document.getElementById('greeting');
+
+  const tick = () => updateClock(clockEl, dateEl, greetingEl);
+  tick();
+  setInterval(tick, 1000);
+}
