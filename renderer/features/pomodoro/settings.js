@@ -4,14 +4,12 @@ export const DEFAULT_SETTINGS = Object.freeze({
   focusMinutes: 25,
   shortBreakMinutes: 5,
   longBreakMinutes: 15,
-  cyclesBeforeLongBreak: 4,
 });
 
 const LIMITS = Object.freeze({
   focusMinutes: { min: 1, max: 120 },
   shortBreakMinutes: { min: 1, max: 60 },
   longBreakMinutes: { min: 1, max: 60 },
-  cyclesBeforeLongBreak: { min: 1, max: 12 },
 });
 
 function clampInt(value, fallback, { min, max }) {

@@ -10,7 +10,7 @@ Relógio digital **e sistema Pomodoro** feitos com **Electron**, usando `HTML`, 
 - 👋 Saudação conforme o horário (Bom dia, Boa tarde, Boa noite)
 
 ### Pomodoro
-- 🍅 Foco (25 min) → Pausa curta (5 min) → a cada 4 ciclos → Pausa longa (15 min)
+- 🍅 Sessão fixa de 6 ciclos: Foco (25 min) → Pausa curta (5 min) → Foco → Pausa curta → Foco → Pausa longa (15 min), finalizando ao fim
 - ▶️ Iniciar / Pausar / Retomar / Pular / Resetar
 - 🔄 Anel de progresso circular + contador de ciclos
 - ⚙️ Durações das etapas configuráveis (persistidas em `localStorage`)

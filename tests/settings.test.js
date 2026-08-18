@@ -28,18 +28,18 @@ describe('settings — persistência', () => {
   test('saveSettings persiste e loadSettings recupera (round-trip)', () => {
     const storage = createFakeStorage();
     const saved = saveSettings(
-      { focusMinutes: 50, shortBreakMinutes: 7, longBreakMinutes: 20, cyclesBeforeLongBreak: 6 },
+      { focusMinutes: 50, shortBreakMinutes: 7, longBreakMinutes: 20 },
       storage
     );
     const loaded = loadSettings(storage);
     expect(loaded).toEqual(saved);
     expect(loaded.focusMinutes).toBe(50);
-    expect(loaded.cyclesBeforeLongBreak).toBe(6);
+    expect(loaded.longBreakMinutes).toBe(20);
   });
 });
 
 describe('settings — normalização', () => {
-  test('normalizeSettings aplica limites', () => {
+  test('normalizeSettings aplica limites e ignora chaves desconhecidas', () => {
     const normalized = normalizeSettings({
       focusMinutes: 999,
       shortBreakMinutes: 0,
@@ -50,7 +50,7 @@ describe('settings — normalização', () => {
     expect(normalized.focusMinutes).toBe(120);
     expect(normalized.shortBreakMinutes).toBe(1);
     expect(normalized.longBreakMinutes).toBe(1);
-    expect(normalized.cyclesBeforeLongBreak).toBe(1);
+    expect(normalized.cyclesBeforeLongBreak).toBeUndefined();
     expect(normalized.garbage).toBeUndefined();
   });
 });

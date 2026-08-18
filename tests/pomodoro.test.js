@@ -9,7 +9,6 @@ const settings = normalizeSettings({
   focusMinutes: 25,
   shortBreakMinutes: 5,
   longBreakMinutes: 15,
-  cyclesBeforeLongBreak: 4,
 });
 const F = settings.focusMinutes * 60000;
 const S = settings.shortBreakMinutes * 60000;
@@ -47,7 +46,7 @@ function createEngine(clock) {
 }
 
 describe('pomodoro engine — estados', () => {
-  test('estado inicial: idle, foco, duração cheia', () => {
+  test('estado inicial: idle, foco, duração cheia, ciclo 1 de 6', () => {
     const clock = createFakeClock();
     const engine = createEngine(clock);
     const snapshot = engine.getSnapshot();
@@ -56,6 +55,8 @@ describe('pomodoro engine — estados', () => {
     expect(snapshot.remainingMs).toBe(F);
     expect(snapshot.totalMs).toBe(F);
     expect(snapshot.completedCycles).toBe(0);
+    expect(snapshot.cycle).toBe(1);
+    expect(snapshot.totalCycles).toBe(6);
   });
 
   test('start -> running e tick sem drift', () => {
@@ -100,16 +101,26 @@ describe('pomodoro engine — estados', () => {
     expect(engine.getSnapshot().remainingMs).toBe(F - 120000);
   });
 
-  test('skip avança para a próxima fase sem contar ciclo', () => {
+  test('skip avança na sequência fixa e reinicia ao fim', () => {
     const clock = createFakeClock();
     const engine = createEngine(clock);
-    engine.start();
-    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
 
+    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.SHORT_BREAK);
+    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
+    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.SHORT_BREAK);
+    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
+    engine.skip();
+    expect(engine.getSnapshot().phase).toBe(PHASES.LONG_BREAK);
+
+    engine.skip();
     const snapshot = engine.getSnapshot();
-    expect(snapshot.state).toBe(STATE.IDLE);
-    expect(snapshot.phase).toBe(PHASES.SHORT_BREAK);
-    expect(snapshot.remainingMs).toBe(S);
+    expect(snapshot.phase).toBe(PHASES.FOCUS);
+    expect(snapshot.cycle).toBe(1);
     expect(snapshot.completedCycles).toBe(0);
   });
 
@@ -126,53 +137,57 @@ describe('pomodoro engine — estados', () => {
     expect(snapshot.phase).toBe(PHASES.FOCUS);
     expect(snapshot.remainingMs).toBe(F);
     expect(snapshot.completedCycles).toBe(0);
+    expect(snapshot.cycle).toBe(1);
   });
 });
 
-describe('pomodoro engine — rotação de fases', () => {
-  test('fim do foco auto-transiciona para pausa curta e auto-inicia', () => {
-    const clock = createFakeClock();
-    const engine = createEngine(clock);
-    engine.start();
-    clock.advance(F);
-
-    const snapshot = engine.getSnapshot();
-    expect(snapshot.phase).toBe(PHASES.SHORT_BREAK);
-    expect(snapshot.remainingMs).toBe(S);
-    expect(snapshot.completedCycles).toBe(1);
-    expect(snapshot.state).toBe(STATE.RUNNING);
-  });
-
-  test('4 ciclos de foco levam à pausa longa', () => {
+describe('pomodoro engine — sessão fixa de 6 ciclos', () => {
+  test('sequência: foco, pausa curta, foco, pausa curta, foco, pausa longa', () => {
     const clock = createFakeClock();
     const engine = createEngine(clock);
     engine.start();
 
     clock.advance(F);
     expect(engine.getSnapshot().phase).toBe(PHASES.SHORT_BREAK);
+    expect(engine.getSnapshot().cycle).toBe(2);
+
     clock.advance(S);
     expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
+    expect(engine.getSnapshot().cycle).toBe(3);
 
     clock.advance(F);
-    clock.advance(S);
-    clock.advance(F);
-    clock.advance(S);
-    clock.advance(F);
+    expect(engine.getSnapshot().phase).toBe(PHASES.SHORT_BREAK);
+    expect(engine.getSnapshot().cycle).toBe(4);
 
-    const snapshot = engine.getSnapshot();
-    expect(snapshot.phase).toBe(PHASES.LONG_BREAK);
-    expect(snapshot.remainingMs).toBe(L);
-    expect(snapshot.completedCycles).toBe(4);
+    clock.advance(S);
+    expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
+    expect(engine.getSnapshot().cycle).toBe(5);
+
+    clock.advance(F);
+    expect(engine.getSnapshot().phase).toBe(PHASES.LONG_BREAK);
+    expect(engine.getSnapshot().cycle).toBe(6);
   });
 
-  test('pausa longa finaliza de volta para o foco', () => {
+  test('conta 3 focos e não usa pausa longa antes do fim', () => {
     const clock = createFakeClock();
     const engine = createEngine(clock);
     engine.start();
+
     clock.advance(F);
     clock.advance(S);
     clock.advance(F);
     clock.advance(S);
+
+    const snapshot = engine.getSnapshot();
+    expect(snapshot.phase).toBe(PHASES.FOCUS);
+    expect(snapshot.completedCycles).toBe(2);
+  });
+
+  test('sessão finaliza ao fim da pausa longa, sem reiniciar sozinha', () => {
+    const clock = createFakeClock();
+    const engine = createEngine(clock);
+    engine.start();
+
     clock.advance(F);
     clock.advance(S);
     clock.advance(F);
@@ -180,7 +195,12 @@ describe('pomodoro engine — rotação de fases', () => {
     clock.advance(F);
     clock.advance(L);
 
-    expect(engine.getSnapshot().phase).toBe(PHASES.FOCUS);
+    const snapshot = engine.getSnapshot();
+    expect(snapshot.state).toBe(STATE.IDLE);
+    expect(snapshot.phase).toBe(PHASES.FOCUS);
+    expect(snapshot.cycle).toBe(1);
+    expect(snapshot.completedCycles).toBe(0);
+    expect(snapshot.remainingMs).toBe(F);
   });
 });
 
@@ -216,5 +236,22 @@ describe('pomodoro engine — configurações e eventos', () => {
     const phaseChange = events.filter((e) => e.name === 'phase-change');
     expect(phaseChange).toHaveLength(1);
     expect(phaseChange[0].phase).toBe(PHASES.SHORT_BREAK);
+  });
+
+  test('emite evento complete ao finalizar a sessão', () => {
+    const clock = createFakeClock();
+    const engine = createEngine(clock);
+    const events = [];
+    engine.on((name) => events.push(name));
+
+    engine.start();
+    clock.advance(F);
+    clock.advance(S);
+    clock.advance(F);
+    clock.advance(S);
+    clock.advance(F);
+    clock.advance(L);
+
+    expect(events).toContain('complete');
   });
 });

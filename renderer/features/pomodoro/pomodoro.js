@@ -12,6 +12,17 @@ export const STATE = Object.freeze({
 
 const TICK_MS = 250;
 
+const SESSION_LENGTH = 6;
+
+const SESSION_SEQUENCE = Object.freeze([
+  PHASES.FOCUS,
+  PHASES.SHORT_BREAK,
+  PHASES.FOCUS,
+  PHASES.SHORT_BREAK,
+  PHASES.FOCUS,
+  PHASES.LONG_BREAK,
+]);
+
 function durationOfPhase(phase, settings) {
   switch (phase) {
     case PHASES.FOCUS:
@@ -39,6 +50,7 @@ export function createPomodoroEngine(options = {}) {
   let state = STATE.IDLE;
   let phase = PHASES.FOCUS;
   let completedCycles = 0;
+  let cycleIndex = 0;
   let phaseEndAt = 0;
   let remainingMs = durationOfPhase(phase, settings);
   let timerId = null;
@@ -48,6 +60,8 @@ export function createPomodoroEngine(options = {}) {
       state,
       phase,
       completedCycles,
+      cycle: cycleIndex + 1,
+      totalCycles: SESSION_LENGTH,
       remainingMs,
       totalMs: durationOfPhase(phase, settings),
     };
@@ -85,13 +99,20 @@ export function createPomodoroEngine(options = {}) {
 
     if (phase === PHASES.FOCUS) {
       completedCycles += 1;
-      phase = completedCycles % settings.cyclesBeforeLongBreak === 0
-        ? PHASES.LONG_BREAK
-        : PHASES.SHORT_BREAK;
-    } else {
+    }
+    cycleIndex += 1;
+
+    if (cycleIndex >= SESSION_LENGTH) {
       phase = PHASES.FOCUS;
+      cycleIndex = 0;
+      completedCycles = 0;
+      remainingMs = durationOfPhase(phase, settings);
+      state = STATE.IDLE;
+      emit('complete', getSnapshot());
+      return;
     }
 
+    phase = SESSION_SEQUENCE[cycleIndex];
     remainingMs = durationOfPhase(phase, settings);
     state = STATE.IDLE;
     emit('phase-change', getSnapshot());
@@ -124,7 +145,14 @@ export function createPomodoroEngine(options = {}) {
   function skip() {
     stopTimer();
     state = STATE.IDLE;
-    phase = phase === PHASES.FOCUS ? PHASES.SHORT_BREAK : PHASES.FOCUS;
+    cycleIndex += 1;
+    if (cycleIndex >= SESSION_LENGTH) {
+      phase = PHASES.FOCUS;
+      cycleIndex = 0;
+      completedCycles = 0;
+    } else {
+      phase = SESSION_SEQUENCE[cycleIndex];
+    }
     remainingMs = durationOfPhase(phase, settings);
     emit('phase-change', getSnapshot());
   }
@@ -134,6 +162,7 @@ export function createPomodoroEngine(options = {}) {
     state = STATE.IDLE;
     phase = PHASES.FOCUS;
     completedCycles = 0;
+    cycleIndex = 0;
     remainingMs = durationOfPhase(phase, settings);
     emit('reset', getSnapshot());
   }

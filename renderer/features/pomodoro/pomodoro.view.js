@@ -40,10 +40,6 @@ function template() {
           <span>Pausa longa (min)</span>
           <input type="number" data-setting="longBreakMinutes" min="1" max="60" value="15">
         </label>
-        <label class="pomodoro__field">
-          <span>Ciclos p/ pausa longa</span>
-          <input type="number" data-setting="cyclesBeforeLongBreak" min="1" max="12" value="4">
-        </label>
 
         <div class="pomodoro__notify">
           <h2 class="pomodoro__settings-title">Notificações</h2>
@@ -127,7 +123,7 @@ export function initPomodoroView(container) {
     const progress = snapshot.totalMs > 0 ? snapshot.remainingMs / snapshot.totalMs : 0;
     ringEl.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - progress));
 
-    cyclesEl.textContent = `Ciclo ${snapshot.completedCycles} de ${settings.cyclesBeforeLongBreak}`;
+    cyclesEl.textContent = `Ciclo ${snapshot.cycle} de ${snapshot.totalCycles}`;
 
     primaryBtn.textContent =
       snapshot.state === STATE.RUNNING ? 'Pausar'
@@ -197,6 +193,9 @@ export function initPomodoroView(container) {
     if (name === 'phase-change') {
       notifyPhaseChange(snapshot);
     }
+    if (name === 'complete') {
+      notify({ title: 'Sessão concluída', body: '6 ciclos finalizados! Mais uma rodada?' });
+    }
   });
   render();
   renderNotificationStatus();
@@ -204,8 +203,8 @@ export function initPomodoroView(container) {
 
 function notifyPhaseChange(snapshot) {
   if (snapshot.phase === PHASES.FOCUS) {
-    notify({ title: 'Pausa concluída', body: 'Bora focar!' });
+    notify({ title: 'Pausa concluída', body: 'Hora do foco!' });
   } else {
-    notify({ title: 'Foco concluído', body: 'Hora de pausar!' });
+    notify({ title: 'Foco concluído', body: 'Hora da pausa!' });
   }
 }

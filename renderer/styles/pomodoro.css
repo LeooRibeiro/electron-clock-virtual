@@ -110,7 +110,6 @@
 
 .pomodoro__btn--primary:hover {
     color: var(--bg-start);
-    box-shadow: 0 0 18px rgba(111, 209, 255, 0.45);
 }
 
 .pomodoro__settings {

@@ -18,7 +18,7 @@
     padding: 8px 24px;
     border-radius: 999px;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .tabs__tab:hover {
@@ -36,7 +36,6 @@
     border-color: var(--accent);
     color: var(--bg-start);
     font-weight: 600;
-    box-shadow: 0 0 18px rgba(111, 209, 255, 0.45);
 }
 
 .panel {
