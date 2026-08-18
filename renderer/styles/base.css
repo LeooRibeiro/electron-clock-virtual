@@ -2,10 +2,27 @@
     --bg-start: #051729;
     --bg-end: #0d4a7a;
     --accent: #6fd1ff;
+    --accent-strong: #4db8e8;
+    --accent-contrast: #04202f;
     --text: #ffffff;
-    --text-muted: #bfe6ff;
-    --card-bg: rgba(255, 255, 255, 0.06);
-    --card-border: rgba(111, 209, 255, 0.25);
+    --text-muted: #cfe9fb;
+    --text-dim: #9cc4e0;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(111, 209, 255, 0.28);
+    --border-strong: rgba(111, 209, 255, 0.55);
+    --success: #7dffb0;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --control-height: 44px;
+    --font-sans: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
 }
 
 * {
@@ -14,16 +31,26 @@
     box-sizing: border-box;
 }
 
+[hidden] {
+    display: none !important;
+}
+
+html,
 body {
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-    height: 100vh;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--text);
+    background: linear-gradient(160deg, var(--bg-start), var(--bg-end));
     display: flex;
     flex-direction: column;
-    background: linear-gradient(160deg, var(--bg-start), var(--bg-end));
-    color: var(--text);
     overflow: hidden;
     user-select: none;
     -webkit-app-region: drag;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
 
 .app {
@@ -34,19 +61,26 @@ body {
     min-height: 0;
 }
 
+/* ------------------------------------------------------------------ */
+/* Web (Vercel/navegador): card centralizado com borda do tema, sem    */
+/* sombras; permite rolagem quando a janela é menor que o conteúdo.    */
+/* ------------------------------------------------------------------ */
 body.is-web {
-    padding: 24px;
+    --web-pad: clamp(8px, 2.5vw, 28px);
+    padding: var(--web-pad);
     align-items: center;
     justify-content: center;
+    overflow: auto;
     -webkit-app-region: no-drag;
 }
 
 body.is-web .app {
-    height: 100%;
+    flex: 0 1 auto;
+    width: 100%;
     max-width: 880px;
-    max-height: 560px;
-    border: 1px solid var(--accent);
-    border-radius: 18px;
+    height: min(560px, calc(100vh - 2 * var(--web-pad)));
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
@@ -57,54 +91,109 @@ main {
     min-height: 0;
 }
 
+.panel {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: safe center;
+    padding: var(--space-4) var(--space-5);
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.panel.is-active {
+    display: flex;
+}
+
+/* Texto selecionável (usabilidade) onde faz sentido */
+.card__body,
+.pomodoro__phase,
+.pomodoro__cycles,
+.pomodoro__notify-status,
+.pomodoro__settings-title,
+.pomodoro__field span {
+    user-select: text;
+}
+
+/* ------------------------------------------------------------------ */
+/* Relógio                                                             */
+/* ------------------------------------------------------------------ */
 .card__header {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--space-3);
 }
 
 .card__icon {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
 }
 
 .card__title {
-    font-size: 18px;
+    font-size: clamp(15px, 2.2vw, 18px);
     font-weight: 600;
-    letter-spacing: 5px;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--accent);
 }
 
 .card__separator {
-    width: 260px;
+    width: min(260px, 58vw);
     height: 2px;
-    margin: 18px auto 26px;
+    margin: var(--space-4) auto var(--space-5);
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
     border-radius: 2px;
 }
 
+.card__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .card__time {
     display: block;
-    font-size: 110px;
+    font-size: clamp(56px, 13vw, 110px);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
     font-weight: 200;
-    letter-spacing: 3px;
     font-variant-numeric: tabular-nums;
 }
 
 .card__date {
     display: block;
-    margin-top: 8px;
-    font-size: 20px;
+    margin-top: var(--space-2);
+    font-size: clamp(15px, 2vw, 20px);
     color: var(--text-muted);
     text-transform: capitalize;
 }
 
 .card__greeting {
-    margin-top: 22px;
-    font-size: 16px;
-    letter-spacing: 2px;
+    margin-top: var(--space-5);
+    font-size: clamp(14px, 1.8vw, 16px);
+    letter-spacing: 0.12em;
     color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Foco de teclado consistente (acessibilidade)                        */
+/* ------------------------------------------------------------------ */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Movimento reduzido (acessibilidade/performance)                     */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
 }
