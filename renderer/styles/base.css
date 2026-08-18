@@ -89,9 +89,3 @@ body {
     letter-spacing: 2px;
     color: var(--accent);
 }
-
-.card__placeholder {
-    font-size: 16px;
-    letter-spacing: 1px;
-    color: var(--text-muted);
-}

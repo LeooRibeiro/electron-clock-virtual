@@ -27,11 +27,12 @@ function durationOfPhase(phase, settings) {
 
 export function createPomodoroEngine(options = {}) {
   const {
-    settings,
     now = Date.now,
     intervalFn = setInterval,
     clearFn = clearInterval,
   } = options;
+
+  let settings = options.settings;
 
   const listeners = new Set();
 
@@ -142,12 +143,21 @@ export function createPomodoroEngine(options = {}) {
     return () => listeners.delete(listener);
   }
 
+  function updateSettings(nextSettings) {
+    settings = nextSettings;
+    if (state === STATE.IDLE) {
+      remainingMs = durationOfPhase(phase, settings);
+    }
+    emit('settings-change', getSnapshot());
+  }
+
   return {
     start,
     pause,
     resume,
     skip,
     reset,
+    updateSettings,
     on,
     getSnapshot,
   };
