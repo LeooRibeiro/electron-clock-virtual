@@ -1,5 +1,6 @@
 import { createPomodoroEngine, PHASES, STATE } from './pomodoro.js';
 import { loadSettings, saveSettings } from './settings.js';
+import { notify } from '../../core/notify.js';
 
 const RING_RADIUS = 54;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
@@ -143,6 +144,19 @@ export function initPomodoroView(container) {
     });
   });
 
-  engine.on(() => render());
+  engine.on((name, snapshot) => {
+    render();
+    if (name === 'phase-change') {
+      notifyPhaseChange(snapshot);
+    }
+  });
   render();
+}
+
+function notifyPhaseChange(snapshot) {
+  if (snapshot.phase === PHASES.FOCUS) {
+    notify({ title: 'Pausa concluída', body: 'Bora focar!' });
+  } else {
+    notify({ title: 'Foco concluído', body: 'Hora de pausar!' });
+  }
 }

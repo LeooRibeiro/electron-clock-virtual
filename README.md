@@ -14,15 +14,18 @@ Um relógio digital simples feito com **Electron**, usando apenas `HTML`, `CSS` 
 ```
 ├── main/
 │   ├── main.js         # Processo principal do Electron (janela + ciclo de vida)
-│   └── preload.js      # Ponte segura (contextBridge) entre renderer e Node
+│   ├── preload.js      # Ponte segura (contextBridge) entre renderer e Node
+│   └── notifications.js # Notificações nativas do SO (via IPC)
 ├── renderer/
 │   ├── index.html      # Estrutura da página (com abas)
 │   ├── app.js          # Bootstrap do renderer (módulo ES)
 │   ├── styles/
 │   │   ├── base.css    # Estilos base e visual
-│   │   └── tabs.css    # Navegação por abas
+│   │   ├── tabs.css    # Navegação por abas
+│   │   └── pomodoro.css # UI do Pomodoro
 │   ├── core/
-│   │   └── tabs.js     # Gerenciador de abas (estado + acessibilidade)
+│   │   ├── tabs.js     # Gerenciador de abas (estado + acessibilidade)
+│   │   └── notify.js   # Wrapper de notificações (nativo + fallback HTML5)
 │   └── features/
 │       ├── clock/
 │       │   ├── clock.js      # Engine pura do relógio (dados/formatação, sem DOM)

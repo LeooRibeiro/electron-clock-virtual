@@ -1,4 +1,4 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('desktop', {
   platform: process.platform,
@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('desktop', {
     chrome: process.versions.chrome,
     node: process.versions.node,
   },
+  notify: (title, body) => ipcRenderer.invoke('app:notify', { title, body }),
 });
